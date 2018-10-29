@@ -1,0 +1,316 @@
+1. Find powershell
+Windows powershell -> Run as administrator
+2. customize powershell
+properties -> font
+layout
+color
+3.Running basic commands in powershell
+
+	ipconfig
+	ipconfig /all
+	cls
+	ping localhost
+	cd \
+	dir
+	ls
+	del
+	rm
+
+	ping 
+	get-child-item
+	gci
+	cd ..
+
+4. Use PSDrive
+	dir
+         cd hkcu:
+         cd software
+         ls
+         cd c:
+         Get-PSProvider
+            Different storage
+            WSMan - webservice management protocol
+            Alias - 
+            Environment
+            FileSystem
+            Function
+            Registry
+            Variable
+            Certificate 
+         Get-PSDrive: plugin adapter to connect 
+         A
+         Alias
+         C
+         Cert
+         D
+         Env
+         HKCU
+         HKLM
+         Variable
+         WSMan
+
+      cd env:
+       ls
+      cd wsman:
+       ls
+      cd hklm
+       ls
+      cd c:
+
+5. Discover the powershell help system
+     dir /s
+     get-help
+     help dir
+     
+
+     Get-ChildItem  
+     get-help dir
+     help dir -full
+
+      it will tell parameter is required or not
+      examples
+     help dir -example
+     
+6. Find commands in help
+
+	help *service*
+        help *serv*
+        help about_Reserved_Words
+        help Stop-Service
+        help *web*
+
+7. interpret help for command syntax
+    need know which parameter set to use
+    get-service -name bits
+    help Get-WmiObject
+    [] -optional and array
+    Get-Service -Name bits,vss,windefend
+     
+    Get-Service bits,vss,windefend (for first parameter)
+    get-service -computername localhost -name vss,bits
+    help Get-Service -full
+    paramater postion :1
+    Get-Service (scroll arrow)
+
+8. Use parameters to add values
+   help new-service
+   new-service -name MyspecialService -description 'This does something cool'
+
+   get-service
+9. Use online help
+   help -dir online
+
+10.Work with the powershell pipeline
+    
+    connect one command to another
+     Get-Service | more 
+
+11.Import and export: CSV
+    
+    help *csv*
+    Get-Process | convertto-csv   
+    Get-Process | export-csv
+    notepad sample.csv
+    import-csv
+    get-content
+
+12. Import and export XML
+
+    help *export*
+    get-service | export-csv C:\export.csv
+    get-service | export-clixml C:\export.xml
+    import-clixml C:\export.xml
+
+13.  Use Compare -Object for change conrol
+
+    get-process | export-clixml C:\procs.xml
+    Compare-Object -ReferenceObject (Import-Clixml .\procs.xml) -DifferenceObject (get-Process) -Propety name   
+
+14. Output to a file or printer
+
+      dir > C:\dir1.txt
+      dir >> C:\dir1.txt
+      notepad .\dir1.txt
+      dir | out-file C:\dir2.txt
+      dir | out-file C:\dir2.txt -append
+      notepad C:\dir2.txt
+      dir | out-file C:\dir2.txt -NoClobber
+      dir | out-file C:\dir2.txt -WhatIf
+      dir | out-file C:\dir2.txt -Confirm
+      get-process | Stop-Process -WhatIf
+      help *out*
+      get-eventlog -LogName security -Newest 50 | Out-gridview
+      get-eventlog -LogName security -Newest 50 
+     
+15. Convert data to HTML
+
+    get-eventlog -LogName security -Newest 50 | out-file c:\events.txt
+    notepad events.txt
+    get-eventlog -LogName security -Newest 50 | ConverTo-Html | out-file c:\events.html
+    notepad events.txt
+    help ConverTo-Html
+
+16 Extend Powershell -- 
+   RUn -> mmc
+
+17. Find and add PSSnapins
+    Get-PSSnapin -Registered
+    Add-PSSnapin sqlservercmdletsnapin100
+    Get-PSSnapin
+    get-command -PSSnapin sqlservercmdletsnapin100
+    help Invoke-sqlcmd
+
+18. Find add module
+     
+    get-module -ListAvailable
+    get-connect  env:psmodulepath
+    import-module activedirectory
+    get-command -module activedirectory 
+    help Set-ADComputer 
+    get-module
+    New-ADUser
+19. PowerShell Profiles
+notepad Profile.ps1
+import-module activedirectory
+
+
+help set-aduser
+
+20. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+
+5. 

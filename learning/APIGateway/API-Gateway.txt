@@ -1,0 +1,239 @@
+API Gateway
+RESTful APIs
+Mock, HTTP, AWS serverless code (Lambda)
+Swagger export
+Lamda to store data in database
+DynamoDB as NoSQL database
+--------------------------------------------------
+Create an API in API Gateway
+API Gateway from AWS Console
+Create API
+New, clone, import, or from example
+Settings
+
+1. Console aws.amazon.com
+2. Create API
+3. Name and other settings
+
+New API or Import from Swagger or Example API
+
+API name* Music
+Description Fetches music data
+Endpoint Type Regional
+  --> click create API
+ Resources:  where we'll define our different methods, like puts and posts, and our URL note.
+ Stages:  where we deploy our API
+ Authorizers: 
+ Gateway Responses
+ Models: where we'll define the format of our data that will be sent to our API, and what our API returns.
+ Resource Policy
+ Documentation
+ Settings
+---------------------------------------------------------------------------------------------------
+Create a mock GET API method
+Resources
+Methods
+GET
+MoCK 
+TEST
+
+1. Create GET method on the root
+2. Configure mock integration type
+3. Test
+
+Music - > Resources -> / ->Actions -> create Method  -> GET -> (LAmbda function, http, mock, aws service, VPC link) -> Mock
+
+Integration response -->  Body Mapping Templates --> Add mapping template --> {"success": true}
+
+mock: This feature enables API developers to generate API responses from API Gateway directly, without the need for an integration backend.
+
+
+--------------------------------------------------------------------------------------------------
+ApI Gateway to Http Service
+GET resource, method, and model:
+   model Orange Valley CAA website
+	orangevalleycaaa/api/music
+	orangevalleycaaa/api/music/id/1
+   Resource paths (e,g., /music and /id)
+ 
+1. Create path resource: /music and /id
+2. Create method with URL: GET
+3. Data model, method, and integration response
+
+
+---------------------------------------------------------------------------------------------------
+GET Resource, Method, and Model
+
+1. Create path resource: /music and /id
+2. Create method with URL: GET.
+3. Data model, method, and integration response
+
+create resource :
+resource name music
+under music create resource {itemID} -GET
+HTTP - GET
+EndPointURL
+
+model creta musicItem
+application/json
+Single Music Item
+
+model schema
+{
+  "title":"MusicItem",
+  "type":"object",
+  "properties":{
+     "guid":{"type":"string"},
+     "description"{"type":"string"},
+     "home":{"type":"string"},
+     "image_url":{"type":"string"}
+   }
+}
+
+Resource - GET - Method Response  -> 200 -> model musicItem
+Integratio response -> generate template
+{
+     "guid": $input.json('$.id'),
+     "description': $input.json('$.description'),
+     "home": $input.json('$.home'),
+     "image_url": $input.json('$.image_url'),
+   }
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

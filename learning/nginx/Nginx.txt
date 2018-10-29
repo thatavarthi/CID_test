@@ -1,0 +1,578 @@
+comparing Nginx to Apache
+Similarities:
+ Free and open-source software
+ community of users reviewing the code
+ Added functionality through dynamic modules
+ Proxy servers
+ Event-based processing for large number of connections
+Differences:
+
+Apache:  Configurarion: XML syntax
+         Distributed .htaccess files
+         Dynamic content is natively processed with modules
+         static content is less efficient
+         Caching and loadbalancing capabilities with modules
+Nginx: Configuration: C-like syntax
+       Centralized location blocks 
+       Dynamic content requires external processing
+       static content is more efficient
+       Native caching and load balancing capabilities
+
+
+
+Why choose nginx?
+ It is popularity is growing
+ it's efficient
+ It has consistent performance under heavy load
+ it's easier to configure
+
+
+Set up a Sandbox with virtualbox and vagrant
+
+
+VBoxMange --version
+
+Cretate VM with Vagrant
+
+vagrantfile
+
+guest_ip = "192.168.0.3"
+
+Vagarant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.network "private_network", ip: guest_ip
+end
+
+puts "-------------------------------------------------"
+puts "Demo URL : http://#{guest_ip}"
+puts "-------------------------------------------------"
+
+
+
+vagrant up
+
+vagarant ssh
+exit
+vagarant halt
+vagarant up
+vagarant destroy
+
+
+Install Nginx on ubuntu
+vagarant ssh
+sudo su
+apt update
+apt upgrade
+apt install nginx
+nginx -v
+systemctl status nginx
+192.168.0.3
+--> Nginx files and directories:
+cd /etc/cnginx
+ls -ltr
+cd sites-available 
+ls -ltr
+cd /var/log/nginx
+ls -ltr
+   access.log
+   errors.log
+ 
+cd /var/www
+ls -ltr
+ default directoy /var/www/html
+
+sudo su -
+systemctl status nginx
+q
+systemctl status nginx --no-pager
+systemctl start nginx
+systemctl stop nginx
+systemctl is-active nginx
+systemctl start nginx
+systemctl is-active nginx
+
+systemctl reload nginx
+systemctl status nginx
+(last two lines we can see reload status)
+
+nginx -h
+nginx -t
+nginx -T | less
+-->
+Inside nginx.conf
+
+vi /etc/nginx/nginx.conf
+user www-data(user directory)
+
+http{}(contains other directives, logs, include)
+conf.d/*.conf
+sites-enabled/*
+cd /etc/nginx/sites-enabled/
+ls -ltr
+cd /etc/nginx/conf.d
+
+--> configure virtual host
+sudo su -
+cd /etc/nginx/sites-enabled
+ls -ltr
+unlink default
+ls -ltr
+cd ../sites-available
+vim /etc/nginx/conf.d/wisdompetmed.local.conf
+server{
+   listen 80;
+   root /var/www/widompetmed.local;
+}
+
+nginx -t
+
+systemctl reload nginx
+systemctl status nginx
+
+mkdir/var/www/wisdompetmed.local
+echo "Site coming soon" > /var/www/wisdompetmed.local/index.html
+
+----------------------------------------------------------------------------------------
+
+cat /etc/nginx/conf.d/widompetmed.conf
+vi /etc/nginx/conf.d/widompetmed.conf
+server{
+    listen 80 default_server;
+    server_name wisdompetmed.local www.wisdompetmed.local;
+    index index.html index.htm index.php;
+(what file to use)
+    root /var/www/wisdompetmed.local
+}
+
+nginx -t
+systemctl reload reload
+curl localhost
+-----------------
+Add files to the root directory
+cd /vagrant
+ls
+which unzip
+ls /var/www/wisdompetmed.local/
+
+unzip  -o Wisdom_pet_medicine_responsive_website_LYNDA_12773.zip -d /var/www/widompetmed.local/
+
+-o override
+-d directory
+ls -ltr
+
+find /var/www/wisdompetmed.local/ -type f -exec chmod 644 {}\;
+find /var/www/wisdompetmed.local/ -type f -exec chmod 755 {}\;
+
+---->
+Configure locations
+
+
+location directive
+
+
+server{
+   location /{
+        try_files $uri $uri/ =404
+     }
+    location /images{
+        autoindex on
+        
+     }
+   error_page 404 /404.html;
+   location /404.html{
+        internal;
+        
+     }
+   error_page 500 502 503 504 /50x.html;
+   location /50x.html{
+        internal;
+        
+     }
+   location /500{
+        fastcgi_passunix:/this/will/fail;
+        
+     }
+
+}
+
+nginx -t
+system reload nginx
+
+----------------------------------------------------------------------------------------
+Configure logs
+access_log
+error_log
+
+server{
+access_log
+error_log
+}
+
+----------------------------------------------------------------------------------------
+Troubleshoot nginx:
+nginx -t
+root /var/www/html 
+ sites can't be
+check status
+reload configuration
+
+verify the ports
+
+sudo lsof -P -n -i :80 -i :443 | grep LISTEN
+sudo netstat -plan | grep nginx
+
+Tail the logs
+ tail -f /var/logs/nginx/*.logs
+
+seek Help
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+The LEMP stack
+LAMP - php, python perl, Mysql,mariadb,apache linux
+LEMP - php, python perl, Mysql,mariadb, Nginx linux
+
+apt install php-fpm php-mysql
+php --version
+systemctl status php7.2-fpm
+vim /etc/nginxconf.d/wisdom.conf
+
+location ~\.php{
+   include snippets/fastcgi-php.conf;
+   fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+   fastcgi_intercept_errors on
+}
+
+vim /var/www/widompetmed.local/info.php
+<?php phpinfo(); phpinfo(INFO_MODULES); ?
+
+192.168.3/info.php
+
+Install MariaDB on NGINX
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+Nginx security 
+Secure sites with NGINX
+1. Keep your operating system and software patched and up-to-date
+2. restrict access where possible
+3. Use password to protect sensitive information
+4. Use SSL to protect transmissions and identify your site
+
+Configure allow deny directives
+192.168.0.3
+
+vagrant ssh
+sudo su -
+
+vim /etc/nginx/conf.d/wisdompetmed.local.conf
+
+location /appointments/
+{
+   deny all;
+ }
+
+
+vim /etc/nginx/conf.d/wisdompetmed.local.conf
+
+location /appointments/
+{
+   allow 192.168.0.0/24;
+   allow 10.0.0.0/8;
+   deny all;
+ }
+
+
+
+
+
+----------------------------------------------------------------------------------------
+Create 403 page
+vim /etc/nginx/conf.d/wisdompetmed.local.conf
+   error_page 403 /403.html;
+   location /403.html{
+        internal;
+        
+     }
+
+location /deny{
+  deny all;
+}
+
+----------------------------------------------------------------------------------------
+Configuring password authentication
+htpasswd -c /etc/nginx/passwords admin
+htpasswd /etc/nginx/passwords user1
+htpasswd /etc/nginx/passwords user2
+htpasswd -D /etc/nginx/passwords user1
+ls -ltr /etc/nginx/passwords
+chown ww-data /etc/nginx/passwords
+chmod 600 /etc/nginx/passwords
+ls -ltr /etc/nginx/passwords
+
+location /appointments/
+{
+   auth_basic "Authentication is required ..."
+   auth_basic_ser_file /etc/nginx/passwords;
+     location ~\.php{
+   	include snippets/fastcgi-php.conf;
+   	fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+  	 fastcgi_intercept_errors on
+	}
+   allow 192.168.0.0/24;
+   allow 10.0.0.0/8;
+   deny all;
+ }
+
+----------------------------------------------------------------------------------------
+
+Configure https
+
+SSL (Secure Socket Layer
+Legacy and deprecated method for encrytping web traffic
+TLS(Transport Layer Security)
+Current method for encrypting web traffic
+
+----------------------------------------------------------------------------------------
+Create an SSL certificate
+which openssl
+apt install openssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx.key -out /etc/ssl/certs/nginx.crt
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx.key -out /etc/ssl/certs/nginx.crt -batch
+ls -ltr /etc/ssl/certs/nginx.crt
+
+----------------------------------------------------------------------------------------
+Install an SSl certificate on NGINX
+
+new server
+
+
+server{
+     listen 80 default_server;
+      return 301 https://$server_add$request_uri;
+}
+
+server {
+      listen 443 default_server;
+       ssl_certificate /etc/ssl/certs/nginx.crt;
+       ssl_certificate_key /etc/ssl/private/nginx.key;
+
+}
+----------------------------------------------------------------------------------------
+reverse proxies and Load Balncers
+ CONFIGURING NGINX AS REVERSE PROXY
+vim /etc/nginx/conf.d/upstream.conf
+upstream app_server_7001{
+    server 127.0.0.1:7001;
+}
+
+server{
+   listen 80;
+   location /proxy{
+            # trailing slash is key  
+            proxy_pass http://app_server_7001/;
+      }
+}
+
+
+----------------------------------------------------------------------------------------
+CONFIGURING NGINX AS LOADBALANCER
+
+
+load balancing directives
+method --> Directive -> application
+Round Robin -> Upstream servers connected one at a time
+least Connections-> least_conn -> the upstream server with the fewest connectios is favoured
+IP Hash -> ip_hash -> connection is made based on the client's IP address
+All -> weight -> Upstream server with higher weight is favoured
+
+
+upstream app_server_7001{
+    server 127.0.0.1:7001;
+}
+
+upstream roundrobin{
+    server 127.0.0.1:7001;
+    server 127.0.0.1:7002;
+    server 127.0.0.1:7003;
+}
+server{
+   listen 80;
+   location /proxy{
+            # trailing slash is key  
+            proxy_pass http://app_server_7001/;
+      }
+location /roundrobin{
+            # trailing slash is key  
+            proxy_pass http://roundrobin/;
+      }
+}
+
+
+
+
+
+
+
+upstream app_server_7001 {
+    server 127.0.0.1:7001;
+}
+
+upstream roundrobin {
+    # default is round robin
+    server 127.0.0.1:7001;
+    server 127.0.0.1:7002;
+    server 127.0.0.1:7003;
+}
+
+upstream leastconn {
+    # The server with the fewest connections will get traffic
+    least_conn;
+    server 127.0.0.1:7001;
+    server 127.0.0.1:7002;
+    server 127.0.0.1:7003;
+}
+
+upstream iphash {
+    # Connections will stick to the same server
+    ip_hash;
+    server 127.0.0.1:7001;
+    server 127.0.0.1:7002;
+    server 127.0.0.1:7003;
+}
+
+upstream weighted {
+    # More connections will be sent to the weighted server
+    server 127.0.0.1:7001 weight=2;
+    server 127.0.0.1:7002;
+    server 127.0.0.1:7003;
+}
+
+server {
+    listen 80;
+
+    location /proxy {
+        # Trailing slash is key!
+        proxy_pass http://app_server_7001/;
+    }
+
+    location /roundrobin {
+        proxy_pass http://roundrobin/;
+    }
+
+    location /leastconn {
+        proxy_pass http://leastconn/;
+    }
+
+    location /iphash {
+        proxy_pass http://iphash/;
+    }
+
+    location /weighted {
+        proxy_pass http://weighted/;
+    }
+}
+
+----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
